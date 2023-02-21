@@ -13,6 +13,7 @@ import com.github.maxopoly.finale.listeners.EnchantmentDisableListener;
 import com.github.maxopoly.finale.listeners.ExtraDurabilityListener;
 import com.github.maxopoly.finale.listeners.GappleCooldownListener;
 import com.github.maxopoly.finale.listeners.PearlCoolDownListener;
+import com.github.maxopoly.finale.listeners.CrossBowCoolDownListener;
 import com.github.maxopoly.finale.listeners.PlayerListener;
 import com.github.maxopoly.finale.listeners.PotionListener;
 import com.github.maxopoly.finale.listeners.ToolProtectionListener;
@@ -52,9 +53,9 @@ public class Finale extends ACivMod {
 	}
 
 	private void initExternalManagers() {
-		if (!config.isPearlEnabled())
+		if (!config.isPearlEnabled() || !config.isCrossbowCDEnabled())
 			return;
-		// Only set up these managers if pearl cooldown change is in effect, otherwise
+		// Only set up these managers if pearl cooldown or crossbow cooldown change is in effect, otherwise
 		// move on; better not to put hooks in that go unused.
 		PluginManager plugins = Bukkit.getPluginManager();
 		if (plugins.isPluginEnabled("CombatTagPlus")) {
@@ -90,6 +91,11 @@ public class Finale extends ACivMod {
 		}
 		if (config.isItemCDEnabled()) {
 			Bukkit.getPluginManager().registerEvents(new GappleCooldownListener(config.getItemCooldown()), this);
+		}
+		if (config.isCrossbowCDEnabled()) {
+			Bukkit.getPluginManager().
+					registerEvents(new CrossBowCoolDownListener(config.getCrossbowCooldown(), config.CombatTagOnCrossbowShot(),
+							ctpManager), this);
 		}
 		Bukkit.getPluginManager().registerEvents(new WeaponModificationListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ExtraDurabilityListener(), this);

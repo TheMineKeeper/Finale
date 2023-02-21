@@ -34,9 +34,14 @@ public class ConfigParser {
 	private FinaleManager manager;
 	private boolean pearlEnabled;
 	private boolean itemCDEnabled;
+
+	private boolean crossbowCDEnabled;
 	private long pearlCooldown;
 	private long itemCooldown;
+
+	private long crossbowCooldown;
 	private boolean combatTagOnPearl;
+	private boolean combatTagOnCrossbowShot;
 	private PotionHandler potionHandler;
 	private Collection<Enchantment> disabledEnchants;
 	private VelocityHandler velocityHandler;
@@ -49,6 +54,10 @@ public class ConfigParser {
 
 	public boolean combatTagOnPearl() {
 		return combatTagOnPearl;
+	}
+
+	public boolean CombatTagOnCrossbowShot() {
+		return combatTagOnCrossbowShot;
 	}
 
 	public Collection<DamageModificationConfig> getDamageModifiers() {
@@ -67,6 +76,10 @@ public class ConfigParser {
 		return itemCooldown;
 	}
 
+	public long getCrossbowCooldown() {
+		return crossbowCooldown;
+	}
+
 	public PotionHandler getPotionHandler() {
 		return potionHandler;
 	}
@@ -81,6 +94,10 @@ public class ConfigParser {
 
 	public boolean isItemCDEnabled() {
 		return itemCDEnabled;
+	}
+
+	public boolean isCrossbowCDEnabled() {
+		return crossbowCDEnabled;
 	}
 
 	public CombatConfig getCombatConfig() {
@@ -115,6 +132,8 @@ public class ConfigParser {
 		plugin.info("Ender pearl additions: " + pearlEnabled);
 		this.itemCDEnabled = parseItemCooldown(config.getConfigurationSection("gappleCooldown"));
 		plugin.info("Item Cooldowns active: " + itemCDEnabled);
+		this.crossbowCDEnabled = parseCrossbowCooldown(config.getConfigurationSection("crossbows"));
+		plugin.info("Crossbow Cooldown active:" + crossbowCDEnabled);
 		WeaponModifier weapMod = parseWeaponModification(config.getConfigurationSection("weaponModification"));
 		ArmourModifier armourMod = parseArmourModification(config.getConfigurationSection("armourModification"));
 		boolean invulTicksEnabled = config.getBoolean("invulTicksEnabled", false);
@@ -219,6 +238,18 @@ public class ConfigParser {
 		}
 		itemCooldown = parseTime(section.getString("cooldown", "10s"));
 		plugin.info("Item Cooldown active and set to " + itemCooldown/20 + " seconds!");
+		return true;
+	}
+
+	private boolean parseCrossbowCooldown(ConfigurationSection section){
+		if (section == null || !section.getBoolean("enabled", false)) {
+			return false;
+		}
+		crossbowCooldown = parseTime(section.getString("cooldown", "10s"));
+		plugin.info("Item Cooldown active and set to " + itemCooldown/20 + " seconds!");
+		combatTagOnCrossbowShot = section.getBoolean("combatTag", true)
+			&& Bukkit.getPluginManager().isPluginEnabled("CombatTagPlus");
+		plugin.info("Combat tagging on shooting crossbow: " + combatTagOnCrossbowShot);
 		return true;
 	}
 

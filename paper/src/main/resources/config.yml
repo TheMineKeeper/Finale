@@ -84,6 +84,15 @@ pearls:
   #Combat tag using CTP when pearling?
   combatTag: true
 
+# alters crossbow cooldown using vanilla mechanism, optionally combattags on shooting the crossbow (if combattagplus is available)
+crossbows:
+  #Enable custom cooldown?
+  enable: true
+  #Custom crossbow cooldown
+  cooldown: 10s
+  #Combat tag using CTP when shooting?
+  combatTag: true
+
 #Config same as above, except with only enabled and cooldown as options
 gappleCooldown:
   enabled: true
